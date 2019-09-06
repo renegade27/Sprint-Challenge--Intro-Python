@@ -14,16 +14,47 @@
 #
 # Note that the first line of the CSV is header that describes the fields--this
 # should not be loaded into a City object.
-cities = []
+import csv
+
+class City():
+  def __init__(self, city, state_name, county_name, lat, lng, population, density, timezone, zips):
+    self.city = city
+    self.state_name = state_name
+    self.county_name = county_name
+    self.lat = lat
+    self.lng = lng
+    self.population = population
+    self.density = density
+    self.timezone = timezone
+    self.zips = zips
+
+  def __repr__(self):
+    return f'{self.city}, {self.state_name}, {self.county_name}, {self.lat}, {self.lng}, {self.population}, {self.density}, {self.timezone}, {self.zips}'
+
+def getZip(row):
+  counter=0
+  zips = []
+  for arg in row:
+    counter += 1
+    if(counter >= 9):
+      zips.append(arg)
+  return zips
 
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
-    return cities
+  with open('cities.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    count = 0
+    for row in csv_reader:
+      if(count>0):
+        cities.append(City(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], getZip(row)))
+      else:
+        count += 1
+  return cities
 
-cityreader(cities)
+cities = cityreader()
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
